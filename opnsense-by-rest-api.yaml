@@ -3011,6 +3011,20 @@ zabbix_export:
                   value: bgp
                 - tag: bgp-peer
                   value: '{#BGP.PEER}'
+              trigger_prototypes:
+                - uuid: 21dbb1082c924d9aadf31e53c6beda2a
+                  expression: 'max(/OPNsense by REST API/opns.bgp.prefixes["{#BGP.ID}"],5m)=0 and last(/OPNsense by REST API/opns.bgp.established["{#BGP.ID}"])=1'
+                  name: 'BGP session {#BGP.NAME}: no prefixes received'
+                  opdata: '{ITEM.LASTVALUE1}'
+                  priority: AVERAGE
+                  description: 'The session is established but the neighbour has sent no routes for five minutes, so nothing is reachable through it. Check the prefix lists on both sides, in and out, the networks the neighbour announces, and whether its routes are in its own table.'
+                  manual_close: 'YES'
+                  dependencies:
+                    - name: 'BGP session {#BGP.NAME} is down'
+                      expression: 'max(/OPNsense by REST API/opns.bgp.established["{#BGP.ID}"],5m)=0 and length(last(/OPNsense by REST API/opns.bgp.state["{#BGP.ID}"]))>0'
+                  tags:
+                    - tag: scope
+                      value: availability
             - uuid: cdf3d501b74e439b90f3d05b03ce02a6
               name: 'BGP {#BGP.NAME}: Uptime'
               type: DEPENDENT

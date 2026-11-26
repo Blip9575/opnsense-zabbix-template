@@ -308,8 +308,9 @@ rule takes the empty list.
 
 **BGP sessions are watched per neighbour and address family.** The raw item flattens
 `show bgp summary` to one row per neighbour and family, so a neighbour carrying IPv4 and IPv6
-appears twice. A session that is not established for five minutes is a problem; every reset of
-an established session is recorded as an Info event of its own. FRR reports the time since the
+appears twice. A session that is not established for five minutes is a problem, and so is an
+established session that has received no prefixes for five minutes, since nothing is reachable
+through it then; every reset of an established session is recorded as an Info event of its own. FRR reports the time since the
 last state change also while a session is down, so the uptime item is set to 0 then.
 
 **The pf ruleset item** polls every ten minutes on purpose. The response carries the full text
