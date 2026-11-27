@@ -316,7 +316,8 @@ A single trigger over the count could not say which rule changed: Zabbix cuts
 **A CARP backup is not a broken master.** Instances that depend on CARP, WireGuard tunnels
 for example, are down on the backup by design, and some services only run on the master.
 CARP: Node role reads Master, Backup, Mixed or None from the virtual addresses. While it reads
-Backup, the triggers for VPN instances and peers and for BGP sessions stay quiet, and so do the
+Backup, the triggers for VPN instances and peers, for BGP sessions and for firewall rules
+that were disabled or enabled stay quiet (HA sync copies the rules, so the master reports them), and so do the
 interface and service triggers for interfaces and services named in the regex context of
 `{$OPNS.IF.BACKUP.QUIET}` and `{$OPNS.SERVICE.BACKUP.QUIET}`. After a failover the new master
 reports them as usual. Standalone firewalls read None and are not affected.
