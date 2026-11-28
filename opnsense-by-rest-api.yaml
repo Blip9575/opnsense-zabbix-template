@@ -5048,7 +5048,7 @@ zabbix_export:
                   value: '{#RULE.IF}'
               trigger_prototypes:
                 - uuid: faccf8d85f5d4fe097b310d03b8d0861
-                  expression: 'last(/OPNsense by REST API/opns.fw.rule.enabled[{#RULE.UUID}],#1)=0 and last(/OPNsense by REST API/opns.fw.rule.enabled[{#RULE.UUID}],#2)=1'
+                  expression: 'last(/OPNsense by REST API/opns.fw.rule.enabled[{#RULE.UUID}],#1)=0 and last(/OPNsense by REST API/opns.fw.rule.enabled[{#RULE.UUID}],#2)=1 and (last(/OPNsense by REST API/opns.carp.role)<>2 or {$OPNS.CARP.BACKUP.QUIET}=0)'
                   name: 'Firewall rule {#RULE.DESCR} ({#RULE.IF}) was disabled'
                   priority: WARNING
                   description: 'The rule was switched off. A disabled rule is not loaded into pf, so a disabled block rule lets traffic through without anything else changing. Check that this was intended, then close the problem.'
@@ -5057,7 +5057,7 @@ zabbix_export:
                     - tag: scope
                       value: security
                 - uuid: 05a06d55f45044c19a6de8425c4f4cd0
-                  expression: 'last(/OPNsense by REST API/opns.fw.rule.enabled[{#RULE.UUID}],#1)=1 and last(/OPNsense by REST API/opns.fw.rule.enabled[{#RULE.UUID}],#2)=0'
+                  expression: 'last(/OPNsense by REST API/opns.fw.rule.enabled[{#RULE.UUID}],#1)=1 and last(/OPNsense by REST API/opns.fw.rule.enabled[{#RULE.UUID}],#2)=0 and (last(/OPNsense by REST API/opns.carp.role)<>2 or {$OPNS.CARP.BACKUP.QUIET}=0)'
                   name: 'Firewall rule {#RULE.DESCR} ({#RULE.IF}) was enabled'
                   priority: INFO
                   description: 'A rule that was switched off is active again. Switching an old pass rule back on can reopen access that was closed on purpose.'
@@ -5084,7 +5084,7 @@ zabbix_export:
       macros:
         - macro: '{$OPNS.CARP.BACKUP.QUIET}'
           value: '1'
-          description: 'Set to 0 to report VPN instances, VPN peers and BGP sessions as down on a CARP backup too. By default they stay quiet there, because they only run on the master.'
+          description: 'Set to 0 to report VPN instances, VPN peers, BGP sessions and firewall rule changes on a CARP backup too. By default they stay quiet there: tunnels and BGP only run on the master, and HA sync copies rule changes that the master already reports.'
         - macro: '{$OPNS.CPU.LOAD.MAX}'
           value: '2'
         - macro: '{$OPNS.FS.FSNAME.MATCHES}'
