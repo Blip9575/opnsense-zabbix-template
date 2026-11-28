@@ -5017,9 +5017,11 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: faccf8d85f5d4fe097b310d03b8d0861
                   expression: 'last(/OPNsense by REST API/opns.fw.rule.enabled[{#RULE.UUID}],#1)=0 and last(/OPNsense by REST API/opns.fw.rule.enabled[{#RULE.UUID}],#2)=1'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/OPNsense by REST API/opns.fw.rule.enabled[{#RULE.UUID}])=1'
                   name: 'Firewall rule {#RULE.DESCR} ({#RULE.IF}) was disabled'
                   priority: WARNING
-                  description: 'The rule was switched off. A disabled rule is not loaded into pf, so a disabled block rule lets traffic through without anything else changing. Check that this was intended, then close the problem.'
+                  description: 'The rule was switched off. A disabled rule is not loaded into pf, so a disabled block rule lets traffic through without anything else changing. The problem stays open until the rule is switched back on, or until it is closed by hand once the change is confirmed as intended.'
                   manual_close: 'YES'
                   tags:
                     - tag: scope
