@@ -3068,12 +3068,10 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: a8037560584e48248b4f69e74bdf3604
                   expression: 'change(/OPNsense by REST API/opns.bgp.dropped["{#BGP.ID}"])>0'
-                  recovery_mode: NONE
                   name: 'BGP session {#BGP.NAME} was reset'
                   priority: INFO
-                  description: 'An established session ended and the neighbour has to send its routes again. A single reset follows maintenance on either side; repeated resets point at an unstable link or hold timers that are too short.'
+                  description: 'An established session ended and the neighbour has to send its routes again. A single reset follows maintenance on either side; repeated resets point at an unstable link or hold timers that are too short. Recovers at the next reading without a new reset (the dropped counter is sent at least hourly).'
                   manual_close: 'YES'
-                  type: MULTIPLE
                   tags:
                     - tag: scope
                       value: notice
